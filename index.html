@@ -1,72 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- 
-      This is an HTML comment
-      You can write text in a comment and the content won't be visible in the page
-    -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Show Search</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="https://glitch.com/favicon.ico" />
+        h1 {
+            margin-bottom: 10px;
+            color: #ff4081;
+            font-size: 2.5em;
+        }
 
-    <!--
-      This is the page head - it contains info the browser uses
-      Like the title, which appears on the browser tab but not inside the page
-      Further down you'll see the content that displays in the page
-    -->
-    <title>Hello World!</title>
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
 
-    <!-- The website stylesheet -->
-    <link rel="stylesheet" href="/style.css" />
+        input {
+            padding: 15px;
+            border: 2px solid #ff8c00;
+            border-radius: 30px;
+            width: 100%;
+            font-size: 1.2em;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
 
-    <!-- The website JavaScript file -->
-    <script src="/script.js" defer></script>
-  </head>
-  <body>
-    <!--
-      The body includes the content you see in the page
-      Each element is defined using tags, like this <div></div>
-      The attributes like class="wrapper" let us style elements in the CSS
-    -->
-    <div class="wrapper">
-      <div class="content" role="main">
-        <h1 class="title">Hello World!</h1>
-        <img
-          src="https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2Fillustration.svg?v=1618177344016"
-          class="illustration"
-          alt="Editor illustration"
-          title="Click the image!"
-        />
-        <div class="instructions">
-          <h2>Using this project</h2>
-          <p>
-            This is the Glitch <strong>Hello Website</strong> project. You can
-            use it to build your own site. Check out the code in the editor and open
-            the <span class="fileopener" data-file="TODO.md" data-line="0"
-              >TODO</span> for next steps!
-          </p>
-          <!--  🚧 TODO: ADD BUTTON HERE -->
+        input:focus {
+            outline: none;
+            border-color: #ff4081;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+        }
 
-          <!-- Once you've added the button from TODO.md, click it in the page -->
-          <!-- Check out the function in script.js to see how it works -->
-        </div>
-      </div>
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            opacity: 0;
+            animation: fadeIn 0.6s forwards;
+            width: 100%;
+        }
+
+        .item {
+            width: 250px;
+            height: 375px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 64, 129, 0.5);
+        }
+
+        .item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .play-button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff4081;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .play-button:hover {
+            background-color: #ff2366;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            transition: opacity 0.5s ease;
+            padding: 20px; /* Add some padding for the dropdown */
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 1px solid #ff8c00;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #ff4081;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 0;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        iframe:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .item {
+                width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>TV Show Search</h1>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for a TV show...">
     </div>
-    <!-- The footer holds our remix button — you can keep or delete it ✂ -->
-    <footer class="footer">
-      <div class="links"></div>
-      <a
-        class="btn--remix"
-        target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-website"
-      >
-        <img
-          src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"
-          alt=""
-        />
-        Remix on Glitch
-      </a>
-    </footer>
-  </body>
+    <div class="results" id="results"></div>
+
+    <div class="iframe-container" id="iframe-container">
+        <button class="back-button" onclick="closeFullscreen()">&#8592;</button>
+        
+        <!-- Dropdown for server selection -->
+        <select id="server-select" class="dropdown" onchange="updateIframeSource()" onclick="setFirstServer()">
+            <option value="">Select Server</option>
+            <option value="https://vidsrc.cc/v2/embed/tv/(id)">vidsrc.cc v2</option>
+            <option value="https://vidsrc.cc/v3/embed/tv/(id)">vidsrc.cc v3</option>
+            <option value="https://vidsrc.me/embed/tv?imdb=(id)">vidsrc.me</option>
+            <option value="https://vidsrc.in/embed/tv?imdb=(id)">vidsrc.in</option>
+            <option value="https://vidsrc.pm/embed/tv?imdb=(id)">vidsrc.pm</option>
+            <option value="https://vidsrc.net/embed/tv?imdb=(id)">vidsrc.net</option>
+            <option value="https://vidsrc.xyz/embed/tv?imdb=(id)">vidsrc.xyz</option>
+            <option value="https://vidsrc.io/embed/tv?imdb=(id)">vidsrc.io</option>
+            <option value="https://hdfmovies.com/embed/tv/(id)">hdfmovies.com</option>
+            <option value="https://ythd.org/embed/tv/(id)">ythd.org</option>
+        </select>
+
+        <iframe id="video-iframe" src="" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        const apiKey = 'd13abf16ac8e223ca6b73612cc10878d';
+
+        document.getElementById('search').addEventListener('input', function () {
+            searchTVShows(this.value);
+        });
+
+        async function searchTVShows(query) {
+            const url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            displayResults(data.results);
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const MIN_RATING = 6; // Minimum average rating
+            const MIN_YEAR = 2010; // Minimum first air date year
+
+            results.forEach((item) => {
+                const firstAirDate = new Date(item.first_air_date);
+                const firstAirYear = firstAirDate.getFullYear();
+                if (item.poster_path && item.vote_average >= MIN_RATING && firstAirYear >= MIN_YEAR) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+                    itemDiv.innerHTML = `
+                        <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" 
+                             alt="${item.name}" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/200';" 
+                             onclick="playTVShow(${item.id})">
+                    `;
+                    resultsDiv.appendChild(itemDiv);
+                }
+            });
+            resultsDiv.style.opacity = 1; // Show results after rendering
+        }
+
+        function playTVShow(id) {
+            const serverDropdown = document.getElementById('server-select');
+            serverDropdown.value = ''; // Reset the server selector
+            updateIframeSource(id); // Update the iframe source with ID
+            openFullscreenIframe();
+        }
+
+        function updateIframeSource(id) {
+            const serverDropdown = document.getElementById('server-select');
+            const selectedUrl = serverDropdown.value.replace('(id)', id);
+            const videoIframe = document.getElementById('video-iframe');
+            videoIframe.src = selectedUrl; 
+        }
+
+        function openFullscreenIframe() {
+            const iframeContainer = document.getElementById('iframe-container');
+            iframeContainer.style.display = 'flex';
+        }
+
+        function closeFullscreen() {
+            const iframeContainer = document.getElementById('iframe-container');
+            const videoIframe = document.getElementById('video-iframe');
+            videoIframe.src = '';
+            iframeContainer.style.display = 'none';
+        }
+
+        function setFirstServer() {
+            const serverDropdown = document.getElementById('server-select');
+            if (serverDropdown.value === "") {
+                serverDropdown.value = serverDropdown.options[1].value; // Select the first server
+                updateIframeSource();
+            }
+        }
+    </script>
+</body>
 </html>
