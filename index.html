@@ -116,12 +116,12 @@
 
         .dropdown {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
+            top: 15px;
+            right: 50px;
+            background: rgba(255, 255, 255);
             color: #000000;
             border: 1px solid #ff8c00;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 10px;
             cursor: pointer;
             z-index: 10000; /* Make sure dropdown is above everything */
@@ -140,7 +140,7 @@
 
         .back-button {
             position: absolute;
-            top: 20px;
+            top: 10px;
             left: 20px;
             background: none;
             border: none;
@@ -178,9 +178,9 @@
         <button class="back-button" onclick="closeFullscreen()">←</button>
 
         <select id="server-select" class="dropdown" onchange="updateIframeSource(selectedId)">
-            <option value="https://vidsrc.cc/v3/embed/tv/(id)">Host 1</option>
-            <option value="https://hdfmovies.com/embed/tv/(id)">Host 2</option>
-            <option value="https://ythd.org/embed/tv/(id)">Host 3</option>
+            <option value="https://vidsrc.cc/v3/embed/tv/(id)">Vidsrc 1</option>
+            <option value="https://hdfmovies.com/embed/tv/(id)">Vidsrc 2</option>
+            <option value="https://ythd.org/embed/tv/(id)">Vidsrc 3</option>
         </select>
 
         <iframe id="video-iframe" src="" allowfullscreen></iframe>
@@ -226,11 +226,11 @@
             resultsDiv.style.opacity = 1; // Show results after rendering
         }
 
-        function playTVShow(id) {
-            const serverDropdown = document.getElementById('server-select');
-            serverDropdown.value = ''; // Reset the server selector
-            selectedId = id; // Store selected TV show ID
-            openFullscreenIframe(id); // Pass the ID to open fullscreen
+       function playTVShow(id) {
+    const serverDropdown = document.getElementById('server-select');
+    serverDropdown.selectedIndex = 0; // Set the dropdown to the first option (Vidsrc 1)
+    selectedId = id; // Store selected TV show ID
+    openFullscreenIframe(id); // Pass the ID to open fullscreen
         }
 
         function updateIframeSource(id) {
