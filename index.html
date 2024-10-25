@@ -119,26 +119,22 @@
             top: 20px;
             right: 20px;
             background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+            color: #000000;
             border: 1px solid #ff8c00;
             border-radius: 5px;
             padding: 10px;
             cursor: pointer;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #ff4081;
+            z-index: 10000; /* Make sure dropdown is above everything */
         }
 
         iframe {
-            width: 100%;
-            height: 100%;
+            width: 95%;
+            height: 95%;
             border: none;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
             transition: transform 0.3s, opacity 0.3s;
-            z-index: 0;
+            z-index: 1; /* Iframe below the dropdown */
             position: relative;
         }
 
@@ -179,21 +175,12 @@
     <div class="results" id="results"></div>
 
     <div class="iframe-container" id="iframe-container">
-        <button class="back-button" onclick="closeFullscreen()">&#8592;</button>
-        
-        <!-- Dropdown for server selection -->
-        <select id="server-select" class="dropdown" onchange="updateIframeSource()" onclick="setFirstServer()">
-            <option value="">Select Server</option>
-            <option value="https://vidsrc.cc/v2/embed/tv/(id)">vidsrc.cc v2</option>
-            <option value="https://vidsrc.cc/v3/embed/tv/(id)">vidsrc.cc v3</option>
-            <option value="https://vidsrc.me/embed/tv?imdb=(id)">vidsrc.me</option>
-            <option value="https://vidsrc.in/embed/tv?imdb=(id)">vidsrc.in</option>
-            <option value="https://vidsrc.pm/embed/tv?imdb=(id)">vidsrc.pm</option>
-            <option value="https://vidsrc.net/embed/tv?imdb=(id)">vidsrc.net</option>
-            <option value="https://vidsrc.xyz/embed/tv?imdb=(id)">vidsrc.xyz</option>
-            <option value="https://vidsrc.io/embed/tv?imdb=(id)">vidsrc.io</option>
-            <option value="https://hdfmovies.com/embed/tv/(id)">hdfmovies.com</option>
-            <option value="https://ythd.org/embed/tv/(id)">ythd.org</option>
+        <button class="back-button" onclick="closeFullscreen()">←</button>
+
+        <select id="server-select" class="dropdown" onchange="updateIframeSource(selectedId)">
+            <option value="https://vidsrc.cc/v3/embed/tv/(id)">Host 1</option>
+            <option value="https://hdfmovies.com/embed/tv/(id)">Host 2</option>
+            <option value="https://ythd.org/embed/tv/(id)">Host 3</option>
         </select>
 
         <iframe id="video-iframe" src="" allowfullscreen></iframe>
@@ -201,6 +188,7 @@
 
     <script>
         const apiKey = 'd13abf16ac8e223ca6b73612cc10878d';
+        let selectedId = null;
 
         document.getElementById('search').addEventListener('input', function () {
             searchTVShows(this.value);
@@ -241,20 +229,26 @@
         function playTVShow(id) {
             const serverDropdown = document.getElementById('server-select');
             serverDropdown.value = ''; // Reset the server selector
-            updateIframeSource(id); // Update the iframe source with ID
-            openFullscreenIframe();
+            selectedId = id; // Store selected TV show ID
+            openFullscreenIframe(id); // Pass the ID to open fullscreen
         }
 
         function updateIframeSource(id) {
             const serverDropdown = document.getElementById('server-select');
             const selectedUrl = serverDropdown.value.replace('(id)', id);
+
             const videoIframe = document.getElementById('video-iframe');
-            videoIframe.src = selectedUrl; 
+
+            // Update iframe src only if a server is selected
+            if (serverDropdown.value) {
+                videoIframe.src = selectedUrl; 
+            }
         }
 
-        function openFullscreenIframe() {
+        function openFullscreenIframe(id) {
             const iframeContainer = document.getElementById('iframe-container');
             iframeContainer.style.display = 'flex';
+            updateIframeSource(id); // Update iframe source with the provided ID
         }
 
         function closeFullscreen() {
@@ -262,14 +256,6 @@
             const videoIframe = document.getElementById('video-iframe');
             videoIframe.src = '';
             iframeContainer.style.display = 'none';
-        }
-
-        function setFirstServer() {
-            const serverDropdown = document.getElementById('server-select');
-            if (serverDropdown.value === "") {
-                serverDropdown.value = serverDropdown.options[1].value; // Select the first server
-                updateIframeSource();
-            }
         }
     </script>
 </body>
