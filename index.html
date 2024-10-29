@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Show Search</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: "Arial", sans-serif;
             background: #000000;
             color: #ffffff;
             display: flex;
@@ -16,20 +16,24 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden;
+            position: relative;
+            overflow: auto; 
         }
 
         h1 {
-            margin-bottom: 10px;
+            margin: 0;
+            margin-bottom: 20px;
             color: #ff4081;
-            font-size: 2.5em;
+            font-size: 3em;
+            z-index: 10; 
         }
 
         .search-container {
             width: 100%;
-            max-width: 600px;
-            margin-bottom: 30px;
+            max-width: 700px;
+            margin-bottom: 20px;
             text-align: center;
+            z-index: 10; 
         }
 
         input {
@@ -40,63 +44,69 @@
             font-size: 1.2em;
             background-color: rgba(255, 255, 255, 0.1);
             color: #ffffff;
+            text-align: center;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, width 0.3s ease;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         input:focus {
             outline: none;
-            border-color: #ff4081;
             background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+            border-color: #ff4081; 
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.5), 0 0 10px rgba(0, 0, 0, 0.5); 
+            transform: scale(1.05); 
+        }
+
+        input:focus::placeholder {
+            opacity: 0.5; 
+        }
+
+        input:hover {
+            border-color: #ff2366;
         }
 
         .results {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 20px;
             gap: 20px;
-            max-height: 60vh;
-            overflow-y: auto;
+            max-height: 500vh;
+            overflow-y: hidden;
             opacity: 0;
-            animation: fadeIn 0.6s forwards;
+            transition: opacity 0.6s ease-in-out;
             width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            visibility: hidden;
         }
 
         .item {
-            width: 250px;
-            height: 375px;
+            width: 245px;
+            height: 345px;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
         }
 
         .item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(255, 64, 129, 0.5);
+            transform: scale(1.05) rotate(2deg);
         }
 
         .item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 20px;
+            transition: transform 0.3s ease;
         }
 
-        .play-button {
-            margin: 5px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #ff4081;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .play-button:hover {
-            background-color: #ff2366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        .item:hover img {
+            transform: scale(1.05);
         }
 
         .iframe-container {
@@ -110,50 +120,57 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.9);
-            transition: opacity 0.5s ease;
-            padding: 20px; /* Add some padding for the dropdown */
         }
 
-        .dropdown {
-            position: absolute;
-            top: 15px;
-            right: 50px;
-            background: rgba(255, 255, 255);
-            color: #000000;
-            border: 1px solid #ff8c00;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            z-index: 10000; /* Make sure dropdown is above everything */
+        .iframe-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         iframe {
-            width: 95%;
-            height: 95%;
+            width: 100%;
+            height: 100%;
             border: none;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-            transition: transform 0.3s, opacity 0.3s;
-            z-index: 1; /* Iframe below the dropdown */
-            position: relative;
+            z-index: 1; /* Make sure iframe is below dropdown menu */
         }
 
         .back-button {
             position: absolute;
-            top: 10px;
-            left: 20px;
+            top: 30px;
+            left: 2px;
             background: none;
             border: none;
-            color: white;
-            font-size: 2em;
+            color: #ff8c00;
+            font-size: 3em;
             cursor: pointer;
             z-index: 10000;
+            transition: color 0.3s;
         }
 
-        iframe:hover {
-            transform: scale(1.02);
-            opacity: 0.9;
+        .back-button:hover {
+            color: #ff4081;
         }
+
+        #iframe-server-select {
+    position: absolute; /* Position dropdown absolutely within container */
+    top: 30px;
+    right: 2px;
+    display: none; /* Initially hide the dropdown for server selection in iframe */
+    width: auto; /* Set width automatically */
+    max-width: 300px; /* Set max width for the dropdown */
+    margin: 10px 0; /* Add some margin */
+    padding: 10px;
+    border: 2px solid #ff8c00;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    color: #fffff;
+    font-size: 1.2em;
+    z-index: 1000; /* Ensure it's above other elements */
+    text-align: center; /* Center the text */
+}
 
         @media (max-width: 768px) {
             .item {
@@ -161,40 +178,83 @@
             }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;  
+            background-position: center; 
+            background-repeat: no-repeat; 
+            opacity: 0.8;  
+            display: none; 
+            z-index: 0; 
+            transition: opacity 0.3s ease; 
         }
     </style>
 </head>
 <body>
+    <div class="bg-overlay" id="bg-overlay"></div>
     <h1>TV Show Search</h1>
     <div class="search-container">
-        <input type="text" id="search" placeholder="Search for a TV show...">
+        <input type="text" id="search" placeholder="Search for a TV show..." />
     </div>
+
     <div class="results" id="results"></div>
 
     <div class="iframe-container" id="iframe-container">
-        <button class="back-button" onclick="closeFullscreen()">←</button>
-
-        <select id="server-select" class="dropdown" onchange="updateIframeSource(selectedId)">
-            <option value="https://vidsrc.cc/v3/embed/tv/(id)">Vidsrc 1</option>
-            <option value="https://hdfmovies.com/embed/tv/(id)">Vidsrc 2</option>
-            <option value="https://ythd.org/embed/tv/(id)">Vidsrc 3</option>
-        </select>
-
-        <iframe id="video-iframe" src="" allowfullscreen></iframe>
+        <button class="back-button" onclick="closeFullscreen()">X</button>
+        <div class="iframe-content">
+            <select id="iframe-server-select" onchange="switchIframeServer()">
+                          <optgroup label="Vidsrc 1">
+                <option value="https://hdfmovies.com/embed/tv/">Server 1</option>
+                <option value="https://ythd.org/embed/tv/">Server 2</option>
+           <option value="https://api.autoembed.online/embed//tv/">Server 3</option>
+                <option value="https://api.vidsrc.online/embed//tv/">Server 4</option>
+                <option value="https://api.vidsrc.host/embed//tv/">Server 5</option>
+                                        <optgroup label="Vidsrc 2">
+                <option value="https://vidsrc.me/embed/tv?tmdb=">Server 1</option>
+      <option value="https://vidsrc.in/embed/tv?tmdb=">Server 2</option>
+         <option value="https://vidsrc.pm/embed/tv?tmdb=">Server 3</option>
+            <option value="https://vidsrc.net/embed/tv?tmdb=">Server 4</option>
+          <option value="https://vidsrc.xyz/embed/tv?tmdb=">Server 5</option>
+            <option value="https://vidsrc.io/embed/tv?tmdb=">Server 6</option>
+                                                 <optgroup label="Vidsrc 3">
+                                                    <option value="https://vidsrc.cc/v3/embed/tv/">Server 1</option>
+                              <option value="https://vidsrc.cc/v2/embed/tv/">Server 2</option>
+                                                        <optgroup label="Extra">
+                                          <option value="https://moviee.tv/embed/tv/">Server 1</option>
+                                                          </select>
+            <iframe id="video-iframe" src="" allowfullscreen></iframe>
+        </div>
     </div>
 
     <script>
-        const apiKey = 'd13abf16ac8e223ca6b73612cc10878d';
-        let selectedId = null;
+        const apiKey = "d13abf16ac8e223ca6b73612cc10878d";
 
-        document.getElementById('search').addEventListener('input', function () {
-            searchTVShows(this.value);
+        // Function to fetch trending TV shows
+        async function fetchTrendingShows() {
+            const url = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}&language=en-US`;
+            const response = await fetch(url);
+            const data = await response.json();
+            displayResults(data.results);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchTrendingShows(); // Fetch trending TV shows when the page loads
         });
 
-        async function searchTVShows(query) {
+        document.getElementById("search").addEventListener("input", function () {
+            searchShows(this.value);
+        });
+
+        async function searchShows(query) {
+            if (!query) {
+                fetchTrendingShows(); // If the search is empty, show trending TV shows
+                return;
+            }
+
             const url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
             const response = await fetch(url);
             const data = await response.json();
@@ -202,60 +262,108 @@
         }
 
         function displayResults(results) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // Clear previous results
 
             const MIN_RATING = 6; // Minimum average rating
-            const MIN_YEAR = 2010; // Minimum first air date year
+            const MIN_YEAR = 2000; // Minimum release year
+            let hasResults = false; // Track if there are results
 
             results.forEach((item) => {
-                const firstAirDate = new Date(item.first_air_date);
-                const firstAirYear = firstAirDate.getFullYear();
-                if (item.poster_path && item.vote_average >= MIN_RATING && firstAirYear >= MIN_YEAR) {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'item';
+                const releaseDate = new Date(item.first_air_date);
+                const releaseYear = releaseDate.getFullYear();
+                // Check if the item meets the rating and year criteria
+                if (
+                    item.poster_path &&
+                    item.vote_average >= MIN_RATING &&
+                    releaseYear >= MIN_YEAR
+                ) {
+                    hasResults = true; // A valid result is found
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "item";
                     itemDiv.innerHTML = `
                         <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" 
                              alt="${item.name}" 
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/200';" 
-                             onclick="playTVShow(${item.id})">
+                             onmouseenter="setBackground(${item.id})" 
+                             onmouseleave="clearBackground()" 
+                             onclick="playShow(${item.id})">
                     `;
-                    resultsDiv.appendChild(itemDiv);
+                    resultsDiv.appendChild(itemDiv); // Add the TV show to the resultsDiv
                 }
             });
-            resultsDiv.style.opacity = 1; // Show results after rendering
-        }
 
-       function playTVShow(id) {
-    const serverDropdown = document.getElementById('server-select');
-    serverDropdown.selectedIndex = 0; // Set the dropdown to the first option (Vidsrc 1)
-    selectedId = id; // Store selected TV show ID
-    openFullscreenIframe(id); // Pass the ID to open fullscreen
-        }
-
-        function updateIframeSource(id) {
-            const serverDropdown = document.getElementById('server-select');
-            const selectedUrl = serverDropdown.value.replace('(id)', id);
-
-            const videoIframe = document.getElementById('video-iframe');
-
-            // Update iframe src only if a server is selected
-            if (serverDropdown.value) {
-                videoIframe.src = selectedUrl; 
+            // Show results if there are any
+            if (hasResults) {
+                resultsDiv.style.visibility = "visible"; // Make results visible
+                resultsDiv.style.opacity = 1; // Fade in
+            } else {
+                resultsDiv.style.visibility = "hidden"; // Hide results if none found
+                resultsDiv.style.opacity = 0; // Fade out
+                resultsDiv.innerHTML = "<p>No highly rated TV shows found.</p>"; // Feedback message
             }
         }
 
-        function openFullscreenIframe(id) {
-            const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'flex';
-            updateIframeSource(id); // Update iframe source with the provided ID
+        async function setBackground(showId) {
+            const bgOverlay = document.getElementById("bg-overlay");
+
+            // Fetch show details to get alternative posters
+            const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}&append_to_response=images`;
+            const detailsResponse = await fetch(detailsUrl);
+            const detailsData = await detailsResponse.json();
+
+            // Prepare alternative posters
+            const alternativePosters = detailsData.images.posters.map(poster =>
+                `https://image.tmdb.org/t/p/original${poster.file_path}`
+            ).filter((_, index) => index < 3); // Use the first 3 posters
+
+            // If there are alternative posters, randomly select one
+            if (alternativePosters.length > 0) {
+                const randomIndex = Math.floor(Math.random() * alternativePosters.length);
+                const alternativePoster = alternativePosters[randomIndex];
+
+                // Set the background to the random alternative poster
+                bgOverlay.style.backgroundImage = `url(${alternativePoster})`;
+                bgOverlay.style.display = "block"; // Show the background
+            }
+        }
+
+        function clearBackground() {
+            const bgOverlay = document.getElementById("bg-overlay");
+            bgOverlay.style.display = "none"; // Hide the background
+        }
+
+        function playShow(id) {
+            const selectedServer = document.getElementById("iframe-server-select").value; // Get selected server
+            const videoUrl = `${selectedServer}${id}`; // Use server URL
+            openFullscreenIframe(videoUrl);
+        }
+
+        function openFullscreenIframe(url) {
+            const iframeContainer = document.getElementById("iframe-container");
+            const videoIframe = document.getElementById("video-iframe");
+            const iframeServerSelect = document.getElementById("iframe-server-select");
+
+            videoIframe.src = url;
+            iframeContainer.style.display = "flex";
+            iframeServerSelect.style.display = "block"; // Show the dropdown for server selection
+            document.body.style.overflow = "hidden"; // Hide the scrollbar
         }
 
         function closeFullscreen() {
-            const iframeContainer = document.getElementById('iframe-container');
-            const videoIframe = document.getElementById('video-iframe');
-            videoIframe.src = '';
-            iframeContainer.style.display = 'none';
+            const iframeContainer = document.getElementById("iframe-container");
+            const videoIframe = document.getElementById("video-iframe");
+            videoIframe.src = "";
+            iframeContainer.style.display = "none";
+            document.body.style.overflow = ""; // Restore the scrollbar
+            clearBackground(); // Clear the background when closing fullscreen
+        }
+
+        function switchIframeServer() {
+            const selectedServer = document.getElementById("iframe-server-select").value; // Get selected iframe server
+            const videoIframe = document.getElementById("video-iframe");
+            // Keep the video playing by updating the source
+            videoIframe.src = `${selectedServer}${videoIframe.src.split('/').pop()}`;
         }
     </script>
 </body>
