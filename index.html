@@ -134,7 +134,7 @@
             border: none;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-            z-index: 1; /* Make sure iframe is below dropdown menu */
+            z-index: 1;
         }
 
         .back-button {
@@ -155,22 +155,22 @@
         }
 
         #iframe-server-select {
-    position: absolute; /* Position dropdown absolutely within container */
-    top: 30px;
-    right: 2px;
-    display: none; /* Initially hide the dropdown for server selection in iframe */
-    width: auto; /* Set width automatically */
-    max-width: 300px; /* Set max width for the dropdown */
-    margin: 10px 0; /* Add some margin */
-    padding: 10px;
-    border: 2px solid #ff8c00;
-    border-radius: 5px;
-    background-color: #ff8c00;
-    color: #fffff;
-    font-size: 1.2em;
-    z-index: 1000; /* Ensure it's above other elements */
-    text-align: center; /* Center the text */
-}
+            position: absolute; 
+            top: 30px;
+            right: 2px;
+            display: none; 
+            width: auto; 
+            max-width: 300px; 
+            margin: 10px 0; 
+            padding: 10px;
+            border: 2px solid #ff8c00;
+            border-radius: 5px;
+            background-color: #ff8c00;
+            color: #fffff;
+            font-size: 1.2em;
+            z-index: 1000; 
+            text-align: center; 
+        }
 
         @media (max-width: 768px) {
             .item {
@@ -207,43 +207,50 @@
         <button class="back-button" onclick="closeFullscreen()">X</button>
         <div class="iframe-content">
             <select id="iframe-server-select" onchange="switchIframeServer()">
-                          <optgroup label="Vidsrc 1">
-                <option value="https://hdfmovies.com/embed/tv/">Server 1</option>
-                <option value="https://ythd.org/embed/tv/">Server 2</option>
-                             <optgroup label="Vidsrc 2">
-           <option value="https://api.autoembed.online/embed//tv/">Server 1</option>
-            <option value="https://api-V1.autoembed.online/embed//tv/">Server 2</option>
-           <option value="https://api-V2.autoembed.online/embed//tv/">Server 3</option>
-           <option value="https://api-V3.autoembed.online/embed//tv/">Server 4</option>
-           <option value="https://api-V4.autoembed.online/embed//tv/">Server 5</option>
-           <option value="https://api-V5.autoembed.online/embed//tv/">Server 6</option>
-                            <optgroup label="Vidsrc 3">
-                <option value="https://api.vidsrc.online/embed//tv/">Server 1</option>
-                <option value="https://api-V1.vidsrc.online/embed//tv/">Server 2</option>
-                <option value="https://api-V2.vidsrc.online/embed//tv/">Server 3</option>
-                <option value="https://api-V3.vidsrc.online/embed//tv/">Server 4</option>
-                <option value="https://api-V4.vidsrc.online/embed//tv/">Server 5</option>
-                <option value="https://api-V5.vidsrc.online/embed//tv/">Server 6</option>
-                             <optgroup label="Vidsrc 4">                                                                 
-                <option value="https://api.vidsrc.host/embed//tv/">Server 1</option>
-                <option value="https://api-V1.vidsrc.host/embed//tv/">Server 2</option>
-                <option value="https://api-V2.vidsrc.host/embed//tv/">Server 3</option>
-                <option value="https://api-V3.vidsrc.host/embed//tv/">Server 4</option>
-                <option value="https://api-V4.vidsrc.host/embed//tv/">Server 5</option>
-                <option value="https://api=V5.vidsrc.host/embed//tv/">Server 6</option>
-                                <optgroup label="Vidsrc 5">
-       <option value="https://vidsrc.me/embed/tv?tmdb=">Server 1</option>
-      <option value="https://vidsrc.in/embed/tv?tmdb=">Server 2</option>
-      <option value="https://vidsrc.pm/embed/tv?tmdb=">Server 3</option>
-      <option value="https://vidsrc.net/embed/tv?tmdb=">Server 4</option>
-     <option value="https://vidsrc.xyz/embed/tv?tmdb=">Server 5</option>
-     <option value="https://vidsrc.io/embed/tv?tmdb=">Server 6</option>
-                                <optgroup label="Vidsrc 6">
-      <option value="https://vidsrc.cc/v3/embed/tv/">Server 1</option>
-       <option value="https://vidsrc.cc/v2/embed/tv/">Server 2</option>
-                                     <optgroup label="Extra">
-        <option value="https://moviee.tv/embed/tv/">Server 1</option>
-                                                          </select>
+                <optgroup label="Vidsrc 1">
+                    <option value="https://hdfmovies.com/embed/tv/">Server 1</option>
+                    <option value="https://ythd.org/embed/tv/">Server 2</option>
+                </optgroup>
+                <optgroup label="Vidsrc 2">
+                    <option value="https://api.autoembed.online/embed//tv/">Server 1</option>
+                    <option value="https://api-V1.autoembed.online/embed//tv/">Server 2</option>
+                    <option value="https://api-V2.autoembed.online/embed//tv/">Server 3</option>
+                    <option value="https://api-V3.autoembed.online/embed//tv/">Server 4</option>
+                    <option value="https://api-V4.autoembed.online/embed//tv/">Server 5</option>
+                    <option value="https://api-V5.autoembed.online/embed//tv/">Server 6</option>
+                </optgroup>
+                <optgroup label="Vidsrc 3">
+                    <option value="https://api.vidsrc.online/embed//tv/">Server 1</option>
+                    <option value="https://api-V1.vidsrc.online/embed//tv/">Server 2</option>
+                    <option value="https://api-V2.vidsrc.online/embed//tv/">Server 3</option>
+                    <option value="https://api-V3.vidsrc.online/embed//tv/">Server 4</option>
+                    <option value="https://api-V4.vidsrc.online/embed//tv/">Server 5</option>
+                    <option value="https://api-V5.vidsrc.online/embed//tv/">Server 6</option>
+                </optgroup>
+                <optgroup label="Vidsrc 4">                                                                 
+                    <option value="https://api.vidsrc.host/embed//tv/">Server 1</option>
+                    <option value="https://api-V1.vidsrc.host/embed//tv/">Server 2</option>
+                    <option value="https://api-V2.vidsrc.host/embed//tv/">Server 3</option>
+                    <option value="https://api-V3.vidsrc.host/embed//tv/">Server 4</option>
+                    <option value="https://api-V4.vidsrc.host/embed//tv/">Server 5</option>
+                    <option value="https://api=V5.vidsrc.host/embed//tv/">Server 6</option>
+                </optgroup>
+                <optgroup label="Vidsrc 5">
+                    <option value="https://vidsrc.me/embed/tv?tmdb=">Server 1</option>
+                    <option value="https://vidsrc.in/embed/tv?tmdb=">Server 2</option>
+                    <option value="https://vidsrc.pm/embed/tv?tmdb=">Server 3</option>
+                    <option value="https://vidsrc.net/embed/tv?tmdb=">Server 4</option>
+                    <option value="https://vidsrc.xyz/embed/tv?tmdb=">Server 5</option>
+                    <option value="https://vidsrc.io/embed/tv?tmdb=">Server 6</option>
+                </optgroup>
+                <optgroup label="Vidsrc 6">
+                    <option value="https://vidsrc.cc/v3/embed/tv/">Server 1</option>
+                    <option value="https://vidsrc.cc/v2/embed/tv/">Server 2</option>
+                </optgroup>
+                <optgroup label="Extra">
+                    <option value="https://moviee.tv/embed/tv/">Server 1</option>
+                </optgroup>
+            </select>
             <iframe id="video-iframe" src="" allowfullscreen></iframe>
         </div>
     </div>
@@ -303,8 +310,6 @@
                         <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" 
                              alt="${item.name}" 
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/200';" 
-                             onmouseenter="setBackground(${item.id})" 
-                             onmouseleave="clearBackground()" 
                              onclick="playShow(${item.id})">
                     `;
                     resultsDiv.appendChild(itemDiv); // Add the TV show to the resultsDiv
@@ -320,35 +325,6 @@
                 resultsDiv.style.opacity = 0; // Fade out
                 resultsDiv.innerHTML = "<p>No highly rated TV shows found.</p>"; // Feedback message
             }
-        }
-
-        async function setBackground(showId) {
-            const bgOverlay = document.getElementById("bg-overlay");
-
-            // Fetch show details to get alternative posters
-            const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}&append_to_response=images`;
-            const detailsResponse = await fetch(detailsUrl);
-            const detailsData = await detailsResponse.json();
-
-            // Prepare alternative posters
-            const alternativePosters = detailsData.images.posters.map(poster =>
-                `https://image.tmdb.org/t/p/original${poster.file_path}`
-            ).filter((_, index) => index < 3); // Use the first 3 posters
-
-            // If there are alternative posters, randomly select one
-            if (alternativePosters.length > 0) {
-                const randomIndex = Math.floor(Math.random() * alternativePosters.length);
-                const alternativePoster = alternativePosters[randomIndex];
-
-                // Set the background to the random alternative poster
-                bgOverlay.style.backgroundImage = `url(${alternativePoster})`;
-                bgOverlay.style.display = "block"; // Show the background
-            }
-        }
-
-        function clearBackground() {
-            const bgOverlay = document.getElementById("bg-overlay");
-            bgOverlay.style.display = "none"; // Hide the background
         }
 
         function playShow(id) {
@@ -374,7 +350,6 @@
             videoIframe.src = "";
             iframeContainer.style.display = "none";
             document.body.style.overflow = ""; // Restore the scrollbar
-            clearBackground(); // Clear the background when closing fullscreen
         }
 
         function switchIframeServer() {
